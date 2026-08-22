@@ -1,0 +1,804 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fondo A al Día</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,500;0,600;1,400;1,500&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    color-scheme: light;
+    --page:        #f1f3ef;
+    --surface:     #ffffff;
+    --surface-2:   #f7f8f5;
+    --ink:         #12161a;
+    --ink-2:       #52585a;
+    --muted:       #898f8a;
+    --grid:        #e3e5df;
+    --baseline:    #c7cac2;
+    --border:      rgba(12,20,24,0.10);
+    --border-2:    rgba(12,20,24,0.16);
+    --accent:      #2a78d6;
+    --accent-soft: #cde2fb;
+    --prev:        #aeb3ac;
+    --good:        #006300;
+    --good-fill:   #0ca30c;
+    --bad:         #d03b3b;
+    --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a; --s4: #eda100;
+    --s5: #e87ba4; --s6: #008300; --s7: #4a3aa7;
+    --shadow: 0 1px 2px rgba(12,20,24,0.06), 0 8px 24px -12px rgba(12,20,24,0.18);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --page:        #0d0d0c;
+      --surface:     #1a1a19;
+      --surface-2:   #201f1d;
+      --ink:         #ffffff;
+      --ink-2:       #c3c2b7;
+      --muted:       #8f8d84;
+      --grid:        #2c2c2a;
+      --baseline:    #3a3a37;
+      --border:      rgba(255,255,255,0.10);
+      --border-2:    rgba(255,255,255,0.16);
+      --accent:      #3987e5;
+      --accent-soft: #1c3352;
+      --prev:        #55564f;
+      --good:        #0ca30c;
+      --good-fill:   #0ca30c;
+      --bad:         #e66767;
+      --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500;
+      --s5: #d55181; --s6: #008300; --s7: #9085e9;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 12px 28px -14px rgba(0,0,0,0.6);
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --page:        #0d0d0c;
+    --surface:     #1a1a19;
+    --surface-2:   #201f1d;
+    --ink:         #ffffff;
+    --ink-2:       #c3c2b7;
+    --muted:       #8f8d84;
+    --grid:        #2c2c2a;
+    --baseline:    #3a3a37;
+    --border:      rgba(255,255,255,0.10);
+    --border-2:    rgba(255,255,255,0.16);
+    --accent:      #3987e5;
+    --accent-soft: #1c3352;
+    --prev:        #55564f;
+    --good:        #0ca30c;
+    --good-fill:   #0ca30c;
+    --bad:         #e66767;
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500;
+    --s5: #d55181; --s6: #008300; --s7: #9085e9;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 12px 28px -14px rgba(0,0,0,0.6);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--page);
+    color: var(--ink);
+    font-family: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 28px 20px 64px;
+  }
+
+  /* ---------- Masthead ---------- */
+  .masthead {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 16px;
+    padding-bottom: 18px;
+    border-bottom: 2px solid var(--ink);
+    margin-bottom: 22px;
+    flex-wrap: wrap;
+  }
+  .masthead .kicker {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+    margin: 0 0 6px;
+  }
+  .masthead h1 {
+    font-family: "Newsreader", Georgia, serif;
+    font-weight: 600;
+    font-size: clamp(34px, 5.4vw, 50px);
+    line-height: 1.02;
+    margin: 0;
+    text-wrap: balance;
+  }
+  .masthead .deck {
+    font-family: "Newsreader", Georgia, serif;
+    font-style: italic;
+    font-size: 16px;
+    color: var(--ink-2);
+    max-width: 30ch;
+    margin: 8px 0 0;
+    text-wrap: balance;
+  }
+  .masthead .dateblock {
+    text-align: right;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+    white-space: nowrap;
+  }
+  .masthead .dateblock strong { color: var(--ink-2); font-weight: 600; }
+
+  /* ---------- KPI ticker ---------- */
+  .kpis {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 34px;
+  }
+  .kpi {
+    background: var(--surface);
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .kpi .label {
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .kpi .value {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: clamp(20px, 3.2vw, 27px);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .kpi .sub {
+    font-size: 12.5px;
+    color: var(--ink-2);
+  }
+  .up { color: var(--good); }
+  .down { color: var(--bad); }
+
+  /* ---------- Section headers ---------- */
+  section { margin-bottom: 40px; }
+  .sec-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 4px;
+    flex-wrap: wrap;
+  }
+  .sec-head h2 {
+    font-family: "Newsreader", Georgia, serif;
+    font-weight: 600;
+    font-size: 22px;
+    margin: 0;
+  }
+  .sec-head .note {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11.5px;
+    color: var(--muted);
+  }
+  .sec-sub {
+    font-size: 13.5px;
+    color: var(--ink-2);
+    margin: 2px 0 18px;
+    max-width: 62ch;
+  }
+
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    padding: 20px 20px 12px;
+  }
+
+  /* ---------- Chart 1: daily bars ---------- */
+  #chart-daily {
+    position: relative;
+    height: 260px;
+    margin: 6px 4px 0;
+  }
+  .gridline {
+    position: absolute;
+    left: 0; right: 0;
+    border-top: 1px solid var(--grid);
+  }
+  .gridline .tick {
+    position: absolute;
+    left: -4px;
+    transform: translate(-100%, -50%);
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 10.5px;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .baseline0 { border-top: 1.5px solid var(--baseline); }
+  .bars-row {
+    position: absolute;
+    left: 34px; right: 4px; top: 0; bottom: 0;
+    display: flex;
+    align-items: stretch;
+  }
+  .group {
+    flex: 1;
+    position: relative;
+  }
+  .wk-bar {
+    position: absolute;
+    border-radius: 3px 3px 0 0;
+    cursor: pointer;
+    transition: filter 0.1s ease;
+  }
+  .wk-bar.neg { border-radius: 0 0 3px 3px; }
+  .wk-bar:hover { filter: brightness(1.15); }
+  .group .xlabel {
+    position: absolute;
+    bottom: -22px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 10px;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .wk-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+    font-size: 12px;
+    color: var(--ink-2);
+    margin: 2px 0 18px;
+  }
+  .wk-legend span { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+  .wk-legend i { width: 9px; height: 9px; border-radius: 2px; display: inline-block; flex: none; }
+  #chart-daily-foot {
+    margin-top: 36px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--muted);
+    font-family: "IBM Plex Mono", monospace;
+  }
+
+  /* tooltip */
+  .tooltip {
+    position: fixed;
+    pointer-events: none;
+    background: var(--ink);
+    color: var(--page);
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11.5px;
+    line-height: 1.5;
+    padding: 8px 10px;
+    border-radius: 6px;
+    box-shadow: var(--shadow);
+    z-index: 50;
+    opacity: 0;
+    transform: translate(-50%, -100%);
+    transition: opacity 0.08s ease;
+    white-space: nowrap;
+  }
+  .tooltip b { display: block; font-size: 12px; margin-bottom: 2px; }
+  .tooltip.show { opacity: 1; }
+
+  /* ---------- Chart 2: AFP comparison ---------- */
+  .legend {
+    display: flex;
+    gap: 18px;
+    font-size: 12px;
+    color: var(--ink-2);
+    margin: 2px 0 18px;
+  }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .legend i { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+
+  .afp-row {
+    display: grid;
+    grid-template-columns: 92px 1fr;
+    align-items: center;
+    gap: 12px;
+    padding: 9px 0;
+    border-bottom: 1px solid var(--grid);
+  }
+  .afp-row:last-child { border-bottom: none; }
+  .afp-name {
+    font-size: 13.5px;
+    font-weight: 600;
+  }
+  .afp-bars {
+    position: relative;
+    height: 30px;
+  }
+  .afp-zero {
+    position: absolute;
+    top: -2px; bottom: -2px;
+    width: 1.5px;
+    background: var(--baseline);
+  }
+  .afp-bar {
+    position: absolute;
+    height: 9px;
+    border-radius: 4px;
+  }
+  .afp-bar.cur { top: 2px; background: var(--accent); }
+  .afp-bar.prev { top: 15px; background: var(--prev); }
+  .afp-val {
+    position: absolute;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 10.5px;
+    font-weight: 600;
+    top: 50%;
+    white-space: nowrap;
+  }
+  .afp-val.cur-val { transform: translateY(calc(-100% - 3px)); }
+  .afp-val.prev-val { transform: translateY(3px); color: var(--ink-2); font-weight: 400; }
+
+  /* ---------- Tables ---------- */
+  .tables {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 22px;
+  }
+  @media (max-width: 720px) {
+    .tables { grid-template-columns: 1fr; }
+    .kpis { grid-template-columns: 1fr; }
+  }
+  @media (min-width: 721px) and (max-width: 860px) {
+    .kpis { grid-template-columns: repeat(2, 1fr); }
+  }
+  .detail-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+  .afp-pick {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .afp-pick select {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+    background: var(--surface);
+    border: 1.5px solid var(--border-2);
+    border-radius: 7px;
+    padding: 5px 28px 5px 10px;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, var(--muted) 52%), linear-gradient(135deg, var(--muted) 48%, transparent 50%);
+    background-position: right 13px center, right 8px center;
+    background-size: 5px 5px, 5px 5px;
+    background-repeat: no-repeat;
+    cursor: pointer;
+  }
+  .afp-pick select:hover { border-color: var(--accent); }
+  .afp-pick select:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .table-scroll { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; }
+  th, td {
+    text-align: right;
+    padding: 7px 10px;
+    font-variant-numeric: tabular-nums;
+    font-family: "IBM Plex Mono", monospace;
+    white-space: nowrap;
+  }
+  th:first-child, td:first-child { text-align: left; font-family: "IBM Plex Sans", sans-serif; }
+  thead th {
+    font-family: "IBM Plex Sans", sans-serif;
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 600;
+    border-bottom: 1.5px solid var(--ink);
+    padding-bottom: 8px;
+  }
+  tbody tr { border-bottom: 1px solid var(--grid); }
+  tbody tr:hover { background: var(--surface-2); }
+
+  /* ---------- Footer ---------- */
+  footer {
+    margin-top: 46px;
+    padding-top: 18px;
+    border-top: 2px solid var(--ink);
+    font-size: 12.5px;
+    color: var(--ink-2);
+    line-height: 1.65;
+  }
+  footer a { color: var(--accent); }
+  footer .fsources { margin-top: 6px; color: var(--muted); font-size: 11.5px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="masthead">
+    <div>
+      <p class="kicker">AFP Chile · Multifondos</p>
+      <h1>Fondo A al Día</h1>
+      <p class="deck">Rentabilidad diaria de la última semana y ranking de rentabilidad acumulada entre las siete administradoras.</p>
+    </div>
+    <div class="dateblock">
+      <div>Cierre analizado<br><strong id="lastDateLabel">20 ago 2026</strong></div>
+    </div>
+  </div>
+
+  <div class="kpis" id="kpiRow"></div>
+
+  <section>
+    <div class="sec-head">
+      <h2>Rentabilidad diaria — Fondo A por AFP</h2>
+      <span class="note">SEMANA DEL 14 AL 20 AGO 2026 · % SOBRE CUOTA DEL DÍA ANTERIOR</span>
+    </div>
+    <p class="sec-sub">La rentabilidad de cada jornada, para las siete AFP, calculada a partir del valor cuota publicado. Las barras nacen de 0%: hacia arriba es ganancia, hacia abajo es pérdida. Pase el cursor sobre una barra para ver el valor cuota exacto.</p>
+    <div class="wk-legend" id="wkLegend"></div>
+    <div class="panel">
+      <div id="chart-daily"></div>
+      <div id="chart-daily-foot"></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>Rentabilidad acumulada por AFP</h2>
+      <span class="note">FONDO A</span>
+    </div>
+    <p class="sec-sub">Acumulado del mes en curso frente al mes anterior, para las siete administradoras. La barra parte de 0%.</p>
+    <div class="legend">
+      <span><i style="background:var(--accent)"></i>Mes en curso (1–18 ago)</span>
+      <span><i style="background:var(--prev)"></i>Mes anterior (jul 2026)</span>
+    </div>
+    <div class="panel" id="chart-afp"></div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>Detalle</h2>
+    </div>
+    <div class="tables">
+      <div>
+        <div class="detail-head">
+          <p class="sec-sub" style="margin:0">Valor cuota y rentabilidad diaria — Fondo A</p>
+          <label class="afp-pick">
+            <span>AFP</span>
+            <select id="afpPicker"></select>
+          </label>
+        </div>
+        <div class="panel table-scroll">
+          <table id="tblDaily">
+            <thead><tr><th>Fecha</th><th>Cuota $</th><th>Cuota UF</th><th>Rent. nominal</th><th>Rent. UF</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <p class="sec-sub" style="margin-top:0">Ranking del mes — Fondo A</p>
+        <div class="panel table-scroll">
+          <table id="tblAfp">
+            <thead><tr><th>AFP</th><th>Este mes</th><th>Mes ant.</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div>El Fondo A es el más riesgoso de los cinco multifondos chilenos (hasta 80% en renta variable) y el de mayor volatilidad diaria. Esta página es un panel informativo, no constituye asesoría de inversión ni recomendación de cambio de fondo o de AFP.</div>
+    <div class="fsources">
+      Datos: valor cuota y rentabilidad diaria por AFP y comparativo mensual entre AFP publicados por
+      <a href="https://www.quetalmiafp.cl" target="_blank" rel="noopener">quetalmiafp.cl</a> y
+      <a href="https://queafp.cl/rentabilidad" target="_blank" rel="noopener">queafp.cl</a> a partir de cifras de la
+      <a href="https://www.spensiones.cl" target="_blank" rel="noopener">Superintendencia de Pensiones</a>.
+      El valor cuota en UF y la rentabilidad real se calculan usando la UF publicada por
+      <a href="https://mindicador.cl" target="_blank" rel="noopener">mindicador.cl</a>.
+      Instantánea tomada el 22 ago 2026 — para la cifra oficial del día, revisa spensiones.cl directamente.
+    </div>
+  </footer>
+
+</div>
+
+<div class="tooltip" id="tooltip"></div>
+
+<script>
+(function () {
+  "use strict";
+
+  // ---------------- Data ----------------
+  // Fondo A — fechas de la semana comparada (todas las AFP publican estos mismos días hábiles).
+  const weekDates = [
+    { d: "2026-08-14", lbl: "14" },
+    { d: "2026-08-17", lbl: "17" },
+    { d: "2026-08-18", lbl: "18" },
+    { d: "2026-08-19", lbl: "19" },
+    { d: "2026-08-20", lbl: "20" }
+  ];
+
+  // Valor de la UF esos mismos días (fuente: mindicador.cl), alineado 1:1 con weekDates.
+  // Sirve para derivar el valor cuota en UF y la rentabilidad real (descontada la UF) de cada AFP.
+  const ufWeek = [40851.38, 40855.33, 40856.64, 40857.96, 40859.28];
+
+  // Fondo A por AFP: valor cuota + rentabilidad diaria de la semana (alineado a weekDates),
+  // y rentabilidad acumulada del mes en curso (1-18 ago) vs mes anterior (jul 2026).
+  const afps = [
+    { name: "Capital",   color: "var(--s1)", cur: 2.65, prev: -2.89, week: [
+      { vc: 94197.28, ret: 0.37219 }, { vc: 94189.48, ret: -0.00828 }, { vc: 94220.54, ret: 0.03298 },
+      { vc: 94312.10, ret: 0.09718 }, { vc: 94161.71, ret: -0.15946 }
+    ] },
+    { name: "Cuprum",    color: "var(--s2)", cur: 2.60, prev: -2.78, week: [
+      { vc: 98508.91, ret: 0.39361 }, { vc: 98493.52, ret: -0.01562 }, { vc: 98530.95, ret: 0.03800 },
+      { vc: 98600.24, ret: 0.07032 }, { vc: 98440.87, ret: -0.16163 }
+    ] },
+    { name: "Habitat",   color: "var(--s3)", cur: 2.58, prev: -3.17, week: [
+      { vc: 99206.75, ret: 0.35505 }, { vc: 99198.43, ret: -0.00839 }, { vc: 99306.91, ret: 0.10936 },
+      { vc: 99367.58, ret: 0.06109 }, { vc: 99194.06, ret: -0.17462 }
+    ] },
+    { name: "Modelo",    color: "var(--s4)", cur: 2.57, prev: -2.89, week: [
+      { vc: 95166.41, ret: 0.36747 }, { vc: 95150.63, ret: -0.01658 }, { vc: 95190.80, ret: 0.04222 },
+      { vc: 95315.98, ret: 0.13150 }, { vc: 95130.63, ret: -0.19446 }
+    ] },
+    { name: "PlanVital", color: "var(--s5)", cur: 2.51, prev: -2.80, week: [
+      { vc: 91562.14, ret: 0.34556 }, { vc: 91583.73, ret: 0.02358 }, { vc: 91596.95, ret: 0.01443 },
+      { vc: 91705.95, ret: 0.11900 }, { vc: 91573.00, ret: -0.14497 }
+    ] },
+    { name: "ProVida",   color: "var(--s6)", cur: 2.65, prev: -2.88, week: [
+      { vc: 97507.95, ret: 0.35989 }, { vc: 97542.47, ret: 0.03540 }, { vc: 97584.08, ret: 0.04266 },
+      { vc: 97683.17, ret: 0.10154 }, { vc: 97512.42, ret: -0.17480 }
+    ] },
+    { name: "Uno",       color: "var(--s7)", cur: 2.40, prev: -2.64, week: [
+      { vc: 99092.74, ret: 0.34590 }, { vc: 99105.76, ret: 0.01314 }, { vc: 99099.48, ret: -0.00634 },
+      { vc: 99217.58, ret: 0.11917 }, { vc: 99011.37, ret: -0.20784 }
+    ] }
+  ];
+
+  // ---------------- Formatting (es-CL) ----------------
+  const nfPct = new Intl.NumberFormat("es-CL", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const nfVc  = new Intl.NumberFormat("es-CL", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const nfUf  = new Intl.NumberFormat("es-CL", { minimumFractionDigits: 4, maximumFractionDigits: 4 });
+  function fmtPct(v) { return v === null || v === undefined ? "—" : (v > 0 ? "+" : v < 0 ? "−" : "") + nfPct.format(Math.abs(v)) + "%"; }
+  function fmtVc(v)  { return nfVc.format(v); }
+  function fmtUf(v)  { return nfUf.format(v); }
+
+  // Deriva valor cuota en UF y rentabilidad "real" (en UF) de cada AFP a partir del valor
+  // cuota en pesos y la UF del día. El primer día de la ventana no tiene día previo -> null.
+  afps.forEach(function (a) {
+    a.week.forEach(function (w, i) {
+      w.vcUF = w.vc / ufWeek[i];
+    });
+    a.week.forEach(function (w, i) {
+      w.retUF = i === 0 ? null : (w.vcUF / a.week[i - 1].vcUF - 1) * 100;
+    });
+  });
+
+  // ---------------- KPIs ----------------
+  const lastIdx = weekDates.length - 1;
+  const lastDate = weekDates[lastIdx];
+  const dayRets = afps.map(function (a) { return a.week[lastIdx].ret; });
+  const dayAvg = dayRets.reduce(function (s, v) { return s + v; }, 0) / dayRets.length;
+  const dayBestVal = Math.max.apply(null, dayRets);
+  const dayWorstVal = Math.min.apply(null, dayRets);
+  const dayBest = afps.filter(function (a) { return a.week[lastIdx].ret === dayBestVal; }).map(function (a) { return a.name; }).join(" / ");
+  const dayWorst = afps.filter(function (a) { return a.week[lastIdx].ret === dayWorstVal; }).map(function (a) { return a.name; }).join(" / ");
+  const curAvg = afps.reduce(function (s, a) { return s + a.cur; }, 0) / afps.length;
+
+  document.getElementById("lastDateLabel").textContent =
+    new Date(lastDate.d + "T12:00:00").toLocaleDateString("es-CL", { day: "numeric", month: "short", year: "numeric" }).replace(".", "");
+
+  const kpiRow = document.getElementById("kpiRow");
+  const kpis = [
+    {
+      label: "Fondo A · hoy (prom. 7 AFP)",
+      value: fmtPct(dayAvg),
+      sub: lastDate.lbl + " ago, rentabilidad diaria",
+      cls: dayAvg >= 0 ? "up" : "down"
+    },
+    {
+      label: "Mejor hoy",
+      value: dayBest,
+      sub: fmtPct(dayBestVal),
+      cls: "up"
+    },
+    {
+      label: "Peor hoy",
+      value: dayWorst,
+      sub: fmtPct(dayWorstVal),
+      cls: "down"
+    },
+    {
+      label: "Promedio 7 AFP · mes",
+      value: fmtPct(curAvg),
+      sub: "acumulado 1–18 ago, Fondo A",
+      cls: curAvg >= 0 ? "up" : "down"
+    }
+  ];
+  kpiRow.innerHTML = kpis.map(function (k) {
+    return '<div class="kpi"><div class="label">' + k.label + '</div>' +
+      '<div class="value ' + k.cls + '">' + k.value + '</div>' +
+      '<div class="sub">' + k.sub + '</div></div>';
+  }).join("");
+
+  const wkLegend = document.getElementById("wkLegend");
+  wkLegend.innerHTML = afps.map(function (a) {
+    return '<span><i style="background:' + a.color + '"></i>' + a.name + '</span>';
+  }).join("");
+
+  // ---------------- Tooltip ----------------
+  const tip = document.getElementById("tooltip");
+  function showTip(x, y, html) {
+    tip.innerHTML = html;
+    tip.style.left = x + "px";
+    tip.style.top = (y - 10) + "px";
+    tip.classList.add("show");
+  }
+  function hideTip() { tip.classList.remove("show"); }
+
+  // ---------------- Chart 1: daily bars ----------------
+  (function renderDaily() {
+    const el = document.getElementById("chart-daily");
+    const footEl = document.getElementById("chart-daily-foot");
+    const H = el.clientHeight || 260;
+
+    let posMax = 0, negMax = 0;
+    afps.forEach(function (a) {
+      a.week.forEach(function (w) {
+        if (w.ret > posMax) posMax = w.ret;
+        if (-w.ret > negMax) negMax = -w.ret;
+      });
+    });
+    const headroom = 18; // px reserved above the tallest bar and below the deepest one
+    const pxPerPct = (H - headroom * 2) / (posMax + negMax);
+    const baselineTop = posMax * pxPerPct + headroom;
+
+    // gridlines at clean 0.2% steps within range
+    const step = 0.2;
+    let gridHtml = "";
+    for (let v = Math.ceil((-negMax) / step) * step; v <= posMax + step / 2; v += step) {
+      const top = baselineTop - v * pxPerPct;
+      if (top < 2 || top > H - 2) continue;
+      const isZero = Math.abs(v) < 1e-6;
+      gridHtml += '<div class="gridline' + (isZero ? " baseline0" : "") + '" style="top:' + top.toFixed(1) + 'px">' +
+        '<span class="tick">' + fmtPct(v) + '</span></div>';
+    }
+
+    const n = afps.length;
+    const barW = 100 / n; // % of group width per bar
+    const barPad = 0.12; // fraction of barW kept as gap between bars
+
+    const groupsHtml = weekDates.map(function (wd, wi) {
+      const barsHtml = afps.map(function (a, ai) {
+        const w = a.week[wi];
+        const h = Math.abs(w.ret) * pxPerPct;
+        const isNeg = w.ret < 0;
+        const top = isNeg ? baselineTop : baselineTop - h;
+        const left = ai * barW + barW * barPad / 2;
+        const width = barW * (1 - barPad);
+        return '<div class="wk-bar' + (isNeg ? " neg" : "") + '" data-afp="' + ai + '" data-day="' + wi + '" ' +
+          'style="left:' + left.toFixed(2) + '%;width:' + width.toFixed(2) + '%;top:' + top.toFixed(1) + 'px;height:' + Math.max(h, 1.2).toFixed(1) + 'px;background:' + a.color + '"></div>';
+      }).join("");
+      return '<div class="group">' + barsHtml +
+        '<div class="xlabel">' + wd.lbl + ' ago</div>' +
+        '</div>';
+    }).join("");
+
+    el.innerHTML = gridHtml + '<div class="bars-row">' + groupsHtml + '</div>';
+
+    el.querySelectorAll(".wk-bar").forEach(function (barEl) {
+      const ai = +barEl.getAttribute("data-afp");
+      const wi = +barEl.getAttribute("data-day");
+      const a = afps[ai], wd = weekDates[wi], w = a.week[wi];
+      barEl.addEventListener("mouseenter", function () {
+        const r = barEl.getBoundingClientRect();
+        showTip(r.left + r.width / 2, r.top,
+          '<b>' + a.name + ' · ' + wd.lbl + ' ago 2026</b>cuota ' + fmtVc(w.vc) + '<br>rent. ' + fmtPct(w.ret));
+      });
+      barEl.addEventListener("mousemove", function () {
+        const r = barEl.getBoundingClientRect();
+        tip.style.left = (r.left + r.width / 2) + "px";
+      });
+      barEl.addEventListener("mouseleave", hideTip);
+    });
+
+    footEl.innerHTML =
+      '<span>promedio semana: <strong style="color:var(--ink-2)">' + fmtPct(afps.reduce(function (s, a) {
+        return s + a.week.reduce(function (t, w) { return t + w.ret; }, 0) / a.week.length;
+      }, 0) / afps.length) + '</strong></span>' +
+      '<span>7 AFP · Fondo A</span>' +
+      '<span>' + weekDates[0].lbl + '–' + weekDates[lastIdx].lbl + ' ago 2026</span>';
+  })();
+
+  // ---------------- Chart 2: AFP comparison ----------------
+  (function renderAfp() {
+    const el = document.getElementById("chart-afp");
+    const posMax = Math.max.apply(null, afps.map(function (a) { return Math.max(a.cur, 0); }));
+    const negMax = Math.max.apply(null, afps.map(function (a) { return Math.max(-a.prev, 0); }));
+    const pad = 1.18;
+    const zeroPct = (negMax * pad) / ((posMax + negMax) * pad); // fraction of width left of zero
+
+    el.innerHTML = afps.map(function (a) {
+      const scale = 100 / ((posMax + negMax) * pad); // % of row width per percentage point
+      const curW = Math.abs(a.cur) * scale;
+      const prevW = Math.abs(a.prev) * scale;
+      const zeroL = zeroPct * 100;
+      const curLeft = zeroL; // current is positive -> grows right from zero
+      const prevLeft = zeroL - prevW; // previous is negative -> grows left from zero
+      return '<div class="afp-row">' +
+        '<div class="afp-name">' + a.name + '</div>' +
+        '<div class="afp-bars">' +
+          '<div class="afp-zero" style="left:' + zeroL.toFixed(2) + '%"></div>' +
+          '<div class="afp-bar cur" style="left:' + curLeft.toFixed(2) + '%;width:' + Math.max(curW, 0.6).toFixed(2) + '%;background:' + a.color + '"></div>' +
+          '<div class="afp-bar prev" style="left:' + prevLeft.toFixed(2) + '%;width:' + Math.max(prevW, 0.6).toFixed(2) + '%"></div>' +
+          '<div class="afp-val cur-val" style="left:calc(' + (curLeft + curW).toFixed(2) + '% + 4px)">' + fmtPct(a.cur) + '</div>' +
+          '<div class="afp-val prev-val" style="left:calc(' + prevLeft.toFixed(2) + '% - 4px);transform:translate(-100%,3px)">' + fmtPct(a.prev) + '</div>' +
+        '</div>' +
+        '</div>';
+    }).join("");
+  })();
+
+  // ---------------- Tables ----------------
+  (function renderTables() {
+    const picker = document.getElementById("afpPicker");
+    picker.innerHTML = afps.map(function (a, i) {
+      return '<option value="' + i + '">' + a.name + '</option>';
+    }).join("");
+
+    const dailyBody = document.querySelector("#tblDaily tbody");
+    function renderDaily(afpIndex) {
+      const a = afps[afpIndex];
+      dailyBody.innerHTML = weekDates.map(function (wd, wi) {
+        const w = a.week[wi];
+        const clsN = w.ret > 0 ? "up" : w.ret < 0 ? "down" : "";
+        const clsU = w.retUF === null ? "" : w.retUF > 0 ? "up" : w.retUF < 0 ? "down" : "";
+        return "<tr><td>" + wd.lbl + " ago</td><td>" + fmtVc(w.vc) + "</td><td>" + fmtUf(w.vcUF) + "</td>" +
+          "<td class='" + clsN + "'>" + fmtPct(w.ret) + "</td><td class='" + clsU + "'>" + fmtPct(w.retUF) + "</td></tr>";
+      }).reverse().join("");
+    }
+    renderDaily(0);
+    picker.addEventListener("change", function () { renderDaily(+picker.value); });
+
+    const afpBody = document.querySelector("#tblAfp tbody");
+    const sorted = afps.slice().sort(function (a, b) { return b.cur - a.cur; });
+    afpBody.innerHTML = sorted.map(function (a) {
+      return "<tr><td>" + a.name + "</td><td class='up'>" + fmtPct(a.cur) + "</td><td class='down'>" + fmtPct(a.prev) + "</td></tr>";
+    }).join("");
+  })();
+
+})();
+</script>
+</body>
+</html>
